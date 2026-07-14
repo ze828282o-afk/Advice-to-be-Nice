@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advice to be Nice</title>
+  
+  <!-- إضافة أيقونة الموقع (التبويب) -->
+  <link rel="icon" href="https://i.postimg.cc/9FtxXg1Y/Gemini-Generated-Image-klq5r4klq5r4klq5-Cropped-removebg-preview.png" type="image/png">
+  
+  <meta name="theme-color" content="#07111f">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg"></div>
+
+  <div class="app">
+    <header class="hero glass">
+      <div>
+        <p class="badge">موقع إيماني يومي</p>
+        <h1>Advice to be Nice</h1>
+        <p class="subtitle">القرآن، الصلاة، المهام، والإشعارات في مكان واحد.</p>
+      </div>
+      <div class="scoreBox">
+        <span>الحسنات</span>
+        <strong id="hasanat">0</strong>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="glass side">
+        <section class="box">
+          <div class="head">
+            <h2>مواقيت الصلاة</h2>
+            <button class="btn ghost" id="refreshPrayers">تحديث</button>
+          </div>
+          <div class="muted" id="prayerDate"></div>
+          <div id="prayerTimes" class="prayerGrid"></div>
+        </section>
+
+        <section class="box">
+          <div class="head">
+            <h2>المهام</h2>
+            <button class="btn ghost" id="resetTasks">إعادة</button>
+          </div>
+          <div id="tasks" class="tasks"></div>
+        </section>
+
+        <section class="box">
+          <div class="head">
+            <h2>الإشعارات</h2>
+          </div>
+          <button class="btn primary full" id="enableNotifs">تفعيل الإشعارات</button>
+          <p id="notifStatus" class="muted"></p>
+        </section>
+
+        <section class="box">
+          <div class="head">
+            <h2>حفظ التقدم</h2>
+          </div>
+          <button class="btn primary full" id="saveProgress">حفظ التقدم</button>
+        </section>
+      </aside>
+
+      <main class="glass main">
+        <section class="box">
+          <div class="head">
+            <h2 id="surahTitle">اختر سورة من الأسفل</h2>
+            <div class="inline">
+              <button class="btn ghost" id="prevSurah">السابق</button>
+              <button class="btn ghost" id="nextSurah">التالي</button>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <input id="searchSurah" type="text" placeholder="ابحث في السور..." />
+            <button class="btn primary" id="loadSurahBtn">جلب السورة</button>
+          </div>
+
+          <div id="surahMeta" class="muted"></div>
+          <div id="ayahs" class="ayahs"></div>
+        </section>
+
+        <section class="box bottom">
+          <div class="head">
+            <h2>قائمة السور</h2>
+            <span class="muted">اضغط على أي سورة</span>
+          </div>
+          <div id="surahList" class="surahList"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+*{box-sizing:border-box}
+body{margin:0;font-family:"Cairo",sans-serif;background:#07111f;color:#eef4ff}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at top right,#123055 0%,transparent 30%),radial-gradient(circle at top left,#1b4d3a 0%,transparent 25%);z-index:-1}
+.app{width:min(1400px,94vw);margin:auto;padding:24px}
+.glass{background:#0c1728;border:1px solid #203454;border-radius:22px;box-shadow:0 16px 50px rgba(0,0,0,.3)}
+.hero{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:22px;margin-bottom:18px}
+.badge{display:inline-block;background:#1a2d4d;color:#b8d1ff;padding:6px 12px;border-radius:999px;margin:0 0 10px}
+h1,h2{margin:0 0 10px}
+.subtitle,.muted{color:#9db0cc}
+.scoreBox{min-width:160px;text-align:center;padding:18px 22px}
+.scoreBox strong{font-size:52px;color:#35d07f;display:block;line-height:1}
+.layout{display:grid;grid-template-columns:330px 1fr;gap:18px}
+.side,.main{padding:18px}
+.side{display:grid;gap:16px;align-content:start;min-height:calc(100vh - 170px)}
+.main{display:grid;gap:16px}
+.box{background:rgba(9,16,28,.75);border:1px solid #203454;border-radius:18px;padding:16px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.inline{display:flex;gap:8px;flex-wrap:wrap}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+input,select{
+  width:100%;background:#09101c;border:1px solid #203454;color:#eef4ff;
+  border-radius:12px;padding:12px 14px;font-family:inherit
+}
+.btn{border:none;border-radius:12px;padding:12px 14px;font-family:inherit;font-size:15px;cursor:pointer;font-weight:700}
+.primary{background:#2ecc71;color:#052111}
+.ghost{background:#13233d;color:#eef4ff;border:1px solid #203454}
+.full{width:100%}
+.prayerGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.prayerItem,.taskItem,.ayah,.surahItem{
+  background:#09101c;border:1px solid #203454;border-radius:14px;padding:12px
+}
+.prayerItem{display:flex;justify-content:space-between;align-items:center}
+.tasks{display:grid;gap:10px}
+.taskItem{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.taskItem label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.taskItem input{width:20px;height:20px;accent-color:#35d07f}
+.ayahs{display:grid;gap:10px;margin-top:12px}
+.ayah strong{color:#f8c25c}
+.surahList{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:10px;max-height:360px;overflow:auto;padding-right:4px
+}
+.surahItem{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.surahItem.active{border-color:#35d07f;background:#0d1b2e}
+.bottom{margin-top:4px}
+.audioPlayer{width:100%;margin-top:12px}
+.toast{
+  position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120%);
+  background:#102038;border:1px solid #2b4571;color:#fff;padding:12px 18px;border-radius:14px;
+  transition:.25s transform;z-index:20
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media (max-width: 1100px){
+  .layout,.hero{grid-template-columns:1fr;display:grid}
+  .side{min-height:auto}
+  .prayerGrid{grid-template-columns:1fr}
+}
