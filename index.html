@@ -5,7 +5,7 @@
   <!-- أيقونة الموقع -->
   <link rel="icon" type="image/png" href="https://i.postimg.cc/DwfSJ5k9/Gemini-Generated-Image-klq5r4klq5r4klq5-Cropped-removebg-preview.png">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#7c3aed" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -42,6 +42,7 @@
       </div>
     </section>
 
+    <!-- قسم مواقيت الصلاة والمذاهب المحدث -->
     <section class="card prayer-card">
       <div class="section-head">
         <h3>مواقيت الصلاة</h3>
@@ -50,8 +51,21 @@
           <button id="adhanTestBtn" class="btn alt">اختبار الأذان</button>
         </div>
       </div>
-      <p id="locationText" class="muted">جارٍ تحديد الموقع...</p>
+      
+      <!-- إعدادات الموقع والمذهب لتبدو كتطبيق هاتف حقيقي -->
+      <div class="settings-row">
+        <p id="locationText" class="muted">جارٍ تحديد موقعك الجغرافي...</p>
+        <div class="select-container">
+          <label for="madhabSelect" class="muted">المذهب الفقهي:</label>
+          <select id="madhabSelect" class="app-select">
+            <option value="0">الشافعي، المالكي، الحنبلي</option>
+            <option value="1">الحنفي (عصر متأخر)</option>
+          </select>
+        </div>
+      </div>
+
       <div id="prayerTimes" class="prayer-grid"></div>
+      
       <audio id="adhanAudio" preload="auto">
         <source src="https://www.islamcan.com/audio/adhan/azan2.mp3" type="audio/mpeg" />
       </audio>

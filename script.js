@@ -1,13 +1,12 @@
-const prayerTimes = {
-  الفجر: "04:21",
-  الشروق: "06:03",
-  الظهر: "13:01",
-  العصر: "16:37",
+// المواقيت الافتراضية اللي طلبتها كـ Fallback في حال عدم تفعيل الـ GPS
+let prayerTimes = {
+  الفجر: "04:18",
+  الشروق: "06:02",
+  الظهر: "13:00",
+  العصر: "16:39",
   المغرب: "19:58",
-  العشاء: "21:29"
+  العشاء: "21:30"
 };
-
-const adhanUrl = "https://www.islamcan.com/audio/adhan/azan2.mp3";
 
 const quranData = [
   {"number":1,"name":"الفاتحة"},{"number":2,"name":"البقرة"},{"number":3,"name":"آل عمران"},{"number":4,"name":"النساء"},{"number":5,"name":"المائدة"},{"number":6,"name":"الأنعام"},{"number":7,"name":"الأعراف"},{"number":8,"name":"الأنفال"},{"number":9,"name":"التوبة"},{"number":10,"name":"يونس"},{"number":11,"name":"هود"},{"number":12,"name":"يوسف"},{"number":13,"name":"الرعد"},{"number":14,"name":"إبراهيم"},{"number":15,"name":"الحجر"},{"number":16,"name":"النحل"},{"number":17,"name":"الإسراء"},{"number":18,"name":"الكهف"},{"number":19,"name":"مريم"},{"number":20,"name":"طه"},{"number":21,"name":"الأنبياء"},{"number":22,"name":"الحج"},{"number":23,"name":"المؤمنون"},{"number":24,"name":"النور"},{"number":25,"name":"الفرقان"},{"number":26,"name":"الشعراء"},{"number":27,"name":"النمل"},{"number":28,"name":"القصص"},{"number":29,"name":"العنكبوت"},{"number":30,"name":"الروم"},{"number":31,"name":"لقمان"},{"number":32,"name":"السجدة"},{"number":33,"name":"الأحزاب"},{"number":34,"name":"سبأ"},{"number":35,"name":"فاطر"},{"number":36,"name":"يس"},{"number":37,"name":"الصافات"},{"number":38,"name":"ص"},{"number":39,"name":"الزمر"},{"number":40,"name":"غافر"},{"number":41,"name":"فصلت"},{"number":42,"name":"الشورى"},{"number":43,"name":"الزخرف"},{"number":44,"name":"الدخان"},{"number":45,"name":"الجاثية"},{"number":46,"name":"الأحقاف"},{"number":47,"name":"محمد"},{"number":48,"name":"الفتح"},{"number":49,"name":"الحجرات"},{"number":50,"name":"ق"},{"number":51,"name":"الذاريات"},{"number":52,"name":"الطور"},{"number":53,"name":"النجم"},{"number":54,"name":"القمر"},{"number":55,"name":"الرحمن"},{"number":56,"name":"الواقعة"},{"number":57,"name":"الحديد"},{"number":58,"name":"المجادلة"},{"number":59,"name":"الحشر"},{"number":60,"name":"الممتحنة"},{"number":61,"name":"الصف"},{"number":62,"name":"الجمعة"},{"number":63,"name":"المنافقون"},{"number":64,"name":"التغابن"},{"number":65,"name":"الطلاق"},{"number":66,"name":"التحريم"},{"number":67,"name":"الملك"},{"number":68,"name":"القلم"},{"number":69,"name":"الحاقة"},{"number":70,"name":"المعارج"},{"number":71,"name":"نوح"},{"number":72,"name":"الجن"},{"number":73,"name":"المزمل"},{"number":74,"name":"المدثر"},{"number":75,"name":"القيامة"},{"number":76,"name":"الإنسان"},{"number":77,"name":"المرسلات"},{"number":78,"name":"النبأ"},{"number":79,"name":"النازعات"},{"number":80,"name":"عبس"},{"number":81,"name":"التكوير"},{"number":82,"name":"الانفطار"},{"number":83,"name":"المطففين"},{"number":84,"name":"الانشقاق"},{"number":85,"name":"البروج"},{"number":86,"name":"الطارق"},{"number":87,"name":"الأعلى"},{"number":88,"name":"الغاشية"},{"number":89,"name":"الفجر"},{"number":90,"name":"البلد"},{"number":91,"name":"الشمس"},{"number":92,"name":"الليل"},{"number":93,"name":"الضحى"},{"number":94,"name":"الشرح"},{"number":95,"name":"التين"},{"number":96,"name":"العلق"},{"number":97,"name":"القدر"},{"number":98,"name":"البينة"},{"number":99,"name":"الزلزلة"},{"number":100,"name":"العاديات"},{"number":101,"name":"القارعة"},{"number":102,"name":"التكاثر"},{"number":103,"name":"العصر"},{"number":104,"name":"الهمزة"},{"number":105,"name":"الفيل"},{"number":106,"name":"قريش"},{"number":107,"name":"الماعون"},{"number":108,"name":"الكوثر"},{"number":109,"name":"الكافرون"},{"number":110,"name":"النصر"},{"number":111,"name":"المسد"},{"number":112,"name":"الإخلاص"},{"number":113,"name":"الفلق"},{"number":114,"name":"الناس"}
@@ -47,7 +46,9 @@ const state = {
   theme: localStorage.getItem("theme") || "dark",
   currentAdhkar: localStorage.getItem("currentAdhkar") || "صباح",
   lastPrayer: localStorage.getItem("lastPrayer") || "",
+  madhab: localStorage.getItem("appMadhab") || "0", // 0 = حنبلي/شافعي/مالكي، 1 = حنفي
   completed: JSON.parse(localStorage.getItem("completedTasks") || "[]"),
+  userCoords: JSON.parse(localStorage.getItem("userCoords") || "null"),
   motivational: ["ممتاز! كمل واثبت.","أحسنت جدًا.","ربنا يبارك فيك.","خطوة جميلة جدًا.","استمر، أنت على الطريق الصح."]
 };
 
@@ -59,7 +60,9 @@ function save() {
   localStorage.setItem("theme", state.theme);
   localStorage.setItem("currentAdhkar", state.currentAdhkar);
   localStorage.setItem("lastPrayer", state.lastPrayer);
+  localStorage.setItem("appMadhab", state.madhab);
   localStorage.setItem("completedTasks", JSON.stringify(state.completed));
+  localStorage.setItem("userCoords", JSON.stringify(state.userCoords));
 }
 
 function toast(msg) {
@@ -90,37 +93,97 @@ function playAdhan() {
   const audio = $("adhanAudio");
   if (audio) {
     audio.currentTime = 0;
-    audio.play().catch(() => {});
+    // لتفادي قيود المتصفحات على التشغيل التلقائي بدون تفاعل في المرة الأولى
+    audio.play().catch(err => {
+      console.log("برجاء التفاعل مع الشاشة لتفعيل صوت الأذان تلقائياً: ", err);
+    });
   }
 }
 
 function renderPrayerTimes() {
   $("prayerTimes").innerHTML = Object.entries(prayerTimes).map(([name, time]) => `
-    <div class="prayer-item"><strong>${name}</strong><span>${time}</span></div>
+    <div class="prayer-item" id="p-${name}"><strong>${name}</strong><span>${time}</span></div>
   `).join("");
+}
+
+// جلب المواقيت تلقائياً وتحديثها بناء على الموقع الجغرافي والمذهب
+async function fetchPrayerTimesAPI(lat, lon) {
+  try {
+    const today = new Date();
+    const dateStr = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
+    // نستخدم مذهب الحساب التلقائي مع ضبط المذهب الفقهي المختلط (0 للشافعي/الحنبلي، 1 للحنفي)
+    const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lon}&school=${state.madhab}`;
+    
+    const response = await fetch(url);
+    const result = await response.json();
+    
+    if(result && result.data && result.data.timings) {
+      const t = result.data.timings;
+      prayerTimes = {
+        الفجر: t.Fajr,
+        الشروق: t.Sunrise,
+        الظهر: t.Dhuhr,
+        العصر: t.Asr,
+        المغرب: t.Maghrib,
+        العشاء: t.Isha
+      };
+      renderPrayerTimes();
+      $("locationText").textContent = `الموقع الجغرافي: نشط (مُحدّث تلقائياً)`;
+    }
+  } catch (error) {
+    console.log("فشل جلب المواقيت الحية، نعتمد على المواقيت الثابتة المخزنة كـ احتياطي.");
+  }
 }
 
 function autoLocation() {
   if (!navigator.geolocation) {
-    $("locationText").textContent = "الموقع غير مدعوم";
+    $("locationText").textContent = "الموقع الجغرافي غير مدعوم في جهازك";
     return;
   }
+  
   navigator.geolocation.getCurrentPosition(
-    pos => $("locationText").textContent = `الموقع: ${pos.coords.latitude.toFixed(2)}, ${pos.coords.longitude.toFixed(2)} | المواقيت مضبوطة`,
-    () => $("locationText").textContent = "تعذر تحديد الموقع"
+    pos => {
+      state.userCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+      save();
+      fetchPrayerTimesAPI(pos.coords.latitude, pos.coords.longitude);
+    },
+    () => {
+      if(state.userCoords) {
+        // لو وافق زمان ورفض دلوقتي نستخدم الكاش القديم
+        fetchPrayerTimesAPI(state.userCoords.lat, state.userCoords.lon);
+      } else {
+        $("locationText").textContent = "تعذر الوصول للموقع الجغرافي. تم تطبيق المواقيت الافتراضية";
+      }
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
   );
 }
 
+// فحص كل دقيقة للأذان التلقائي بالثانية والدقيقة لضمان التشغيل كتطبيق حقيقي
 function checkPrayer() {
-  const now = new Date().toTimeString().slice(0, 5);
+  const d = new Date();
+  const now = d.toTimeString().slice(0, 5); // صيغة "HH:MM"
+  
   Object.entries(prayerTimes).forEach(([name, time]) => {
-    const key = `${name}-${time}-${now}`;
-    if (now === time && state.lastPrayer !== key) {
-      notify(`حان وقت ${name}`, `تذكير بصلاة ${name}`);
-      playAdhan();
+    // إزالة أي فروق تنسيقية إذا رجعت الـ API صيغة مثل "04:18 (EEST)"
+    const cleanTime = time.split(" ")[0];
+    const key = `${name}-${cleanTime}-${now}`;
+    
+    if (now === cleanTime && state.lastPrayer !== key) {
+      if (name !== "الشروق") { // الشروق ليس له أذان صلاة
+        notify(`حان وقت صلاة ${name}`, `تذكير برفع الأذان الآن`);
+        playAdhan();
+      } else {
+        notify(`شروق الشمس`, `وقت شروق الشمس الآن`);
+      }
       state.lastPrayer = key;
       save();
       toast(`حان وقت ${name}`);
+      
+      // تمييز بصري للصلاة الحالية
+      document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('active-prayer'));
+      const activeEl = $(`p-${name}`);
+      if(activeEl) activeEl.classList.add('active-prayer');
     }
   });
 }
@@ -286,6 +349,19 @@ $("addTask").onclick = () => {
   renderTasks();
   toast("تمت إضافة المهمة");
 };
+
+// تشغيل فلتر المذاهب عند التغيير
+$("madhabSelect").value = state.madhab;
+$("madhabSelect").onchange = (e) => {
+  state.madhab = e.target.value;
+  save();
+  if(state.userCoords) {
+    fetchPrayerTimesAPI(state.userCoords.lat, state.userCoords.lon);
+  } else {
+    toast("سيتم تطبيق المذهب فور التقاط إشارة الـ GPS الجغرافي");
+  }
+};
+
 $("quranSearch").oninput = e => renderQuran(quranData.filter(s => s.name.includes(e.target.value.trim())));
 $("hadithSearch").oninput = e => renderBooks(hadithData.filter(b => b.name.includes(e.target.value.trim())));
 $("backToQuran").onclick = () => location.hash = "#quran-section";
@@ -303,14 +379,17 @@ function loadStats() {
   $("count").textContent = state.zikr;
 }
 
+// التشغيل والتهيئة الحية
 renderPrayerTimes();
 renderQuran();
 renderBooks();
 renderAdhkar();
 renderTasks();
 applyTheme();
-autoLocation();
+autoLocation(); // يحدد الموقع الجغرافي ويجلب الأوقات المحدثة لليوم فوراً
 loadStats();
 parseHash();
 window.addEventListener("hashchange", parseHash);
+
+// فحص كل 30 ثانية لضمان دقة الأذان التلقائي وعدم فوات موعد الصلاة
 setInterval(checkPrayer, 30000);
